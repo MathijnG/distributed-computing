@@ -39,9 +39,6 @@ namespace DcApi.Controllers
             sparkReadableCode += "from pyspark.sql import SparkSession\n";
             sparkReadableCode += "\n";
             sparkReadableCode += "\n";
-            sparkReadableCode += "    \"\"\"\"/ \n";
-            sparkReadableCode += "        Usage: pi [partitions]\n";
-            sparkReadableCode += "    \"\"\"\"/ \n";
             sparkReadableCode += $"    spark = SparkSession.builder.appName(\"{title}\").getOrCreate()\n\n";
             sparkReadableCode += code;
 
