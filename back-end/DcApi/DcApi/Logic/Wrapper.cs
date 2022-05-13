@@ -1,5 +1,4 @@
-﻿using Microsoft.Spark.Sql;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -18,13 +17,8 @@ namespace DcApi.Logic
 
         public string Execute(string args = "")
         {
-           var spark = SparkSession
-              .Builder()
-              .AppName("wrapper_application")
-              .GetOrCreate();
-
             ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = "/bin/python3";
+            start.FileName = "/snap/bin/dotnet";
             start.Arguments = string.Format("{0} {1}", path, args);
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
