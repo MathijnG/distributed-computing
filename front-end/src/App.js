@@ -1,23 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import {useState} from "react";
+import {Container,Row,Button,Col,Card} from "react-bootstrap";
+import CodeEditor from '@uiw/react-textarea-code-editor';
+import axios from "axios";
 
 function App() {
+
+  const [code, setCode] = useState("");
+
+  const submitCode = () => {
+    axios.post("/api/submit", {code: code})
+      .then((response)=>{
+        console.log(response);
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Container style={{padding: "5rem"}}>
+        <Row>
+          <Col style={{padding: "3rem"}}>
+            
+              <CodeEditor
+                value={code}
+                language="python"
+                placeholder="Please enter python code here."
+                onChange={(e) => setCode(e.target.value)}
+                padding={15}
+                style={{
+                  borderRadius: 6,
+                  fontSize: 15,
+                  backgroundColor: "#1C1B22",
+                  fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+                  marginBottom: "1rem"
+                }}
+              />
+              <div>
+                <Button variant="dark" style={{width:"30%"}} onClick={()=>submitCode()}>Submit to cluster</Button>
+              </div>
+            
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 }
