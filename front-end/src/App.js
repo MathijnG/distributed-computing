@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Container,Row,Button,Col,Card} from "react-bootstrap";
+import {Container,Row,Button,Col,Form} from "react-bootstrap";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import axios from "axios";
 
@@ -23,7 +23,7 @@ function App() {
         <Row>
           <Col style={{padding: "3rem"}}>
             
-              <CodeEditor
+              {/* <CodeEditor
                 value={code}
                 language="python"
                 placeholder="Please enter python code here."
@@ -36,7 +36,12 @@ function App() {
                   fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
                   marginBottom: "1rem"
                 }}
-              />
+              /> */}
+
+              <Form.Group className="mb-3">
+                <Form.Control type="file" />
+              </Form.Group>
+
               <div>
                 <Button variant="dark" style={{width:"30%"}} onClick={()=>submitCode()}>Submit to cluster</Button>
               </div>
