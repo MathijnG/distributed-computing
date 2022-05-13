@@ -1,4 +1,5 @@
-﻿using Microsoft.Spark.Sql;
+﻿using Microsoft.Spark;
+using Microsoft.Spark.Sql;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -9,10 +10,11 @@ namespace DcWrapper
     class Program
     {
         static void Main(string[] args)
-        {
+        { 
             var spark = SparkSession
               .Builder()
               .AppName("wrapper_application")
+              .Master("spark://localhost:7077")
               .GetOrCreate();
 
             ProcessStartInfo start = new ProcessStartInfo();
