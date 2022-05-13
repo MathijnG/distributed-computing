@@ -18,7 +18,7 @@ namespace DcApi.Logic
         public string Execute(string args = "")
         {
             ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = "/snap/bin/dotnet";
+            start.FileName = "/opt/spark/bin/spark-submit";
             start.Arguments = string.Format("{0} {1}", path, args);
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
