@@ -1,34 +1,38 @@
-﻿using Microsoft.Spark;
-using Microsoft.Spark.Sql;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+﻿using Microsoft.Spark.Sql;
+using static Microsoft.Spark.Sql.Functions;
 
-namespace DcWrapper
+namespace MySparkApp
 {
     class Program
     {
         static void Main(string[] args)
-        { 
-            var spark = SparkSession
-              .Builder()
-              .AppName("wrapper_application")
-              .Master("spark://localhost:7077")
-              .GetOrCreate();
+        {
+            // Create Spark session
+            SparkSession spark =
+                SparkSession
+                    .Builder()
+                    .AppName("word_count_sample")
+                    .Master("spark://172.168.1.10:7077")
+                    .GetOrCreate();
 
-            ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = "/bin/python3";
-            start.Arguments = string.Format("{0} {1}", args[1], args.Skip(2).ToArray());
-            start.UseShellExecute = false;
-            start.RedirectStandardOutput = true;
-            using (Process process = Process.Start(start))
-            {
-                using (StreamReader reader = process.StandardOutput)
-                {
-                    Console.WriteLine(reader.ReadToEnd());
-                }
-            }
+            // Create initial DataFrame
+            string filePath = args[0];
+            DataFrame dataFrame = spark.Read().Text(filePath);
+
+            //Count words
+            DataFrame words =
+                dataFrame
+                    .Select(Split(Col("value"), " ").Alias("words"))
+                    .Select(Explode(Col("words")).Alias("word"))
+                    .GroupBy("word")
+                    .Count()
+                    .OrderBy(Col("count").Desc());
+
+            // Display results
+            words.Show();
+
+            // Stop Spark session
+            spark.Stop();
         }
     }
 }
