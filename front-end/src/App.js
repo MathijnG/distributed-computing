@@ -1,4 +1,4 @@
-import {Fragment, useEffect, useState} from "react";
+import {Fragment, useState} from "react";
 import {Container,Row,Button,Col,Form, Alert} from "react-bootstrap";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import axios from "axios";
@@ -25,7 +25,7 @@ function App() {
       axios.post("/api/submit", formData, {headers: {"Content-Type": "multipart/form-data"}})
         .then((response)=>{
           //console.log(response);
-          //setCode(response)
+          //setResult(response)
         })
         .catch((error)=>{
           //console.log(error)
