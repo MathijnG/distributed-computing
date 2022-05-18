@@ -1,4 +1,5 @@
 ﻿using Microsoft.Spark.Sql;
+using System;
 using static Microsoft.Spark.Sql.Functions;
 
 namespace MySparkApp
@@ -30,6 +31,8 @@ namespace MySparkApp
 
             // Display results
             words.Show();
+
+            Console.WriteLine("Words should be shown by now.");
 
             // Stop Spark session
             spark.Stop();
