@@ -15,15 +15,16 @@ namespace DcApi.Controllers
     public class CodeController : ControllerBase
     {
         [HttpPost("push")]
-        public async Task<string> PushCode([FromForm] string PythonCode)
+        public async Task<string> PushCode([FromForm] string PythonCode, string Title)
         {
-            await System.IO.File.WriteAllTextAsync(Path.GetTempPath() + "pythonscript.py", MakeSparkReadable(PythonCode, "PythonCode"));
+            await System.IO.File.WriteAllTextAsync(Path.GetTempPath() + "pythonscript.py", MakeSparkReadable(PythonCode, Title));
 
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = "/opt/spark/bin/spark-submit";
-            start.Arguments = string.Format("{0} {1}", " --master spark://172.168.1.10:7077 " + Path.GetTempPath() + "pythonscript.py", "");
+            start.Arguments = string.Format("{0} {1}", " --master spark://172.168.1.10:7077 --deploy-mode cluster " + Path.GetTempPath() + "pythonscript.py", "");
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
+            
             using (Process process = Process.Start(start))
             {
                 using (StreamReader reader = process.StandardOutput)
