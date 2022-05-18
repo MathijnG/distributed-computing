@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import {Container,Row,Button,Col,Form, Alert} from "react-bootstrap";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import axios from "axios";
@@ -6,6 +6,7 @@ import axios from "axios";
 function App() {
 
   const [code, setCode] = useState("");
+  const [result, setResult] = useState("");
   const [title, setTitle] = useState("");
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -44,10 +45,10 @@ function App() {
               <h1>Distributed computing</h1>
               <p>The python code you submit will be distributed on a cluster of several workstations to improve performance.</p>
               {error && 
-                <Alert variant="danger">The title or code field(s) are empty! Please fill in all the fields to submit your code.</Alert>
+                <Alert dismissible onClose={() => setError(false)} variant="danger">The title or code field(s) are empty! Please fill in all the fields to submit your code.</Alert>
               }
               {success && 
-                <Alert variant="success">The code has been submitted!</Alert>
+                <Alert dismissible onClose={() => setSuccess(false)} variant="success">The code has been submitted!</Alert>
               }
               <Form>
                 <Form.Group className="mb-3">
@@ -57,7 +58,7 @@ function App() {
                   <CodeEditor
                     value={code}
                     language="python"
-                    placeholder="Enter python code here."
+                    placeholder="Enter python code here"
                     onChange={(e) => setCode(e.target.value)}
                     padding={15}
                     style={{
@@ -73,8 +74,24 @@ function App() {
                   <Button type="submit" variant="dark" style={{width:"30%"}} onClick={(e)=>submitCode(e)}>Submit</Button>
                 </div>
               </Form>
-              {/* <h1 className="mt-5 mb-3">Results</h1> */}
               
+              {result &&
+                <Fragment>
+                  <h1 className="mt-5 mb-3">Results</h1>
+                  <CodeEditor
+                    value={result}
+                    language="python"
+                    padding={15}
+                    style={{
+                      borderRadius: 6,
+                      fontSize: 15,
+                      backgroundColor: "#1C1B22",
+                      fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+                      marginBottom: "1rem"
+                    }}
+                  />
+                </Fragment>
+              }
           </Col>
         </Row>
       </Container>
