@@ -29,9 +29,12 @@ namespace DcApi.Controllers
             {
                 using (StreamReader reader = process.StandardOutput)
                 {
-                    return reader.ReadToEnd();
+                    int code = process.ExitCode;
+                    return reader.ReadToEnd() + " Status code was: " + code;
                 }
+                
             }
+            
         }
 
         private string MakeSparkReadable(string code, string title)
