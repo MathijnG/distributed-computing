@@ -15,6 +15,8 @@ namespace MySparkApp
                     .AppName("word_count_sample")
                     .Master("spark://172.168.1.10:7077")
                     .GetOrCreate();
+            
+            
 
             // Create initial DataFrame
             string filePath = args[0];
@@ -29,6 +31,8 @@ namespace MySparkApp
                     .Count()
                     .OrderBy(Col("count").Desc());
 
+            Console.Write("Number of cores: " + Environment.ProcessorCount);
+
             // Display results
             words.Show();
 
@@ -36,6 +40,7 @@ namespace MySparkApp
 
             // Stop Spark session
             spark.Stop();
+            
         }
     }
 }
