@@ -20,7 +20,7 @@ namespace DcApi.Controllers
             await System.IO.File.WriteAllTextAsync(Path.GetTempPath() + "pythonscript.py", MakeSparkReadable(PythonCode, Title));
 
             ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = "/opt/spark/bin/spark-submit";
+            start.FileName = "/home/hadoop/spark/bin/spark-submit";
             start.Arguments = string.Format("{0} {1}", " --deploy-mode cluster " + Path.GetTempPath() + "pythonscript.py", "");
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
@@ -29,8 +29,7 @@ namespace DcApi.Controllers
             {
                 using (StreamReader reader = process.StandardOutput)
                 {
-                    int code = process.ExitCode;
-                    return reader.ReadToEnd() + " Status code was: " + code;
+                    return reader.ReadToEnd();
                 }
                 
             }
