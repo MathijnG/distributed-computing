@@ -17,23 +17,23 @@ namespace DcApi.Controllers
         [HttpPost("push")]
         public async Task<string> PushCode([FromForm] string PythonCode, string Title)
         {
+            string ReturnValue = "starting writing python file\n";
             await System.IO.File.WriteAllTextAsync(Path.GetTempPath() + "pythonscript.py", MakeSparkReadable(PythonCode, Title));
-
+            ReturnValue += "wrote python file to " + Path.GetTempPath() + "pythonscript.py\n";
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = "/home/hadoop/spark/bin/spark-submit";
             start.Arguments = string.Format("{0} {1}", " --deploy-mode cluster " + Path.GetTempPath() + "pythonscript.py", "");
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
-            
+            ReturnValue += "Executing process...\n";
             using (Process process = Process.Start(start))
             {
                 using (StreamReader reader = process.StandardOutput)
                 {
-                    return reader.ReadToEnd();
+                    ReturnValue += reader.ReadToEnd();
                 }
-                
             }
-            
+            return ReturnValue;
         }
 
         private string MakeSparkReadable(string code, string title)
