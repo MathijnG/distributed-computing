@@ -21,7 +21,7 @@ namespace DcApi.Controllers
 
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = "/opt/spark/bin/spark-submit";
-            start.Arguments = string.Format("{0} {1}", " --master spark://172.168.1.10:7077 --deploy-mode cluster " + Path.GetTempPath() + "pythonscript.py", "");
+            start.Arguments = string.Format("{0} {1}", " --deploy-mode cluster " + Path.GetTempPath() + "pythonscript.py", "");
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
             
