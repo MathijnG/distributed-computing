@@ -22,13 +22,13 @@ function App() {
       formData.append("title", title)
       formData.append("code", code);
 
-      axios.post("/api/submit", formData, {headers: {"Content-Type": "multipart/form-data"}})
+      axios.post(process.env.REACT_APP_BACKEND + "/api/Code/push", formData, {headers: {"Content-Type": "multipart/form-data"}})
         .then((response)=>{
-          //console.log(response);
+          console.log(response);
           //setResult(response)
         })
         .catch((error)=>{
-          //console.log(error)
+          console.log(error)
         })
 
     } else {
