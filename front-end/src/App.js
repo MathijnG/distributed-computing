@@ -19,8 +19,8 @@ function App() {
       setError(false);
 
       const formData = new FormData();
-      formData.append("title", title)
-      formData.append("code", code);
+      formData.append("Title", title)
+      formData.append("PythonCode", code);
 
       axios.post(process.env.REACT_APP_BACKEND + "/api/Code/push", formData, {headers: {"Content-Type": "multipart/form-data"}})
         .then((response)=>{
