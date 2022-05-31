@@ -2,6 +2,7 @@ import {Fragment, useState} from "react";
 import {Container,Row,Button,Col,Form, Alert} from "react-bootstrap";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import axios from "axios";
+import LoadingIcon from "./loading.svg"
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
   const [title, setTitle] = useState("");
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitCode = (e) => {
     e.preventDefault();
@@ -22,12 +24,15 @@ function App() {
       formData.append("Title", title)
       formData.append("PythonCode", code);
 
+      setIsLoading(true);
+
       axios.post(process.env.REACT_APP_BACKEND + "/api/Code/push", formData, {headers: {"Content-Type": "multipart/form-data"}})
         .then((response)=>{
-          console.log(response);
-          //setResult(response)
+          setIsLoading(false);
+          setResult(response.data);
         })
         .catch((error)=>{
+          setIsLoading(false);
           console.log(error)
         })
 
@@ -39,7 +44,15 @@ function App() {
 
   return (
     <div className="App">
-      <Container style={{padding: "5rem", height: "100vh"}}>
+
+      {isLoading ?
+          <Container style={{padding: "5rem", height: "100vh"}}>
+            <img className="mb-3" src={LoadingIcon} />
+            <p>Your code is running on our cluster, this could take 2-10 minutes.</p>
+            <p>Once your code has been run the results will be shown here.</p>
+          </Container>
+        :
+<Container style={{padding: "5rem", height: "100vh"}}>
         <Row style={{height: "100%"}}>
           <Col style={{padding: "3rem", margin: "auto"}}>
               <h1>Distributed computing</h1>
@@ -95,6 +108,9 @@ function App() {
           </Col>
         </Row>
       </Container>
+      }
+
+      
     </div>
   );
 }
