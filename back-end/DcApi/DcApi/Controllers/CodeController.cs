@@ -20,6 +20,7 @@ namespace DcApi.Controllers
             try
             {
                 string ReturnValue = "starting writing python file\n";
+                ReturnValue += "Content of python file:\n" + PythonCode;
                 await System.IO.File.WriteAllTextAsync(Path.GetTempPath() + "pythonscript.py", MakeSparkReadable(PythonCode, Title));
                 ReturnValue += "wrote python file to " + Path.GetTempPath() + "pythonscript.py\n";
                 ProcessStartInfo start = new ProcessStartInfo();
