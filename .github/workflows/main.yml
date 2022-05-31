@@ -1,0 +1,22 @@
+name: distributed-computing-frontend
+on:
+  push:
+   branches: [main]
+  pull_request:
+   branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: mr-smithers-excellent/docker-build-push@v5
+      name: Build & Push Docker Image for API
+      with:
+       image: mathijng/distributed-computing
+       tags: v1, latest
+       registry: docker.io
+       username: ${{ secrets.DOCKER_USERNAME }}
+       password: ${{ secrets.DOCKER_PASSWORD }}
+       directory: front-end
+       dockerfile: Dockerfile
