@@ -54,12 +54,12 @@ namespace DcApi.Services
             if (result.Succeeded)
             {
                 var currentUser = await userManager.FindByNameAsync(model.Username);
-                if (!await roleManager.RoleExistsAsync("Player"))
+                if (!await roleManager.RoleExistsAsync("Reader"))
                 {
-                    await roleManager.CreateAsync(new IdentityRole("Player"));
+                    await roleManager.CreateAsync(new IdentityRole("Reader"));
                 }
 
-                await userManager.AddToRoleAsync(currentUser, "Player");
+                await userManager.AddToRoleAsync(currentUser, "Reader");
                 var token = jwtService.GenerateJwt(currentUser, await userManager.GetRolesAsync(user));
                 return new SignInResponse() { Success = true, Token = token };
             }
@@ -92,6 +92,39 @@ namespace DcApi.Services
             {
                 throw new BadLoginException("Incorrect Password/Email");
             }
+        }
+
+        public async List<User> GetUsers()
+        {
+            List<User> users = new List<User>();
+            var admins = await userManager.GetUsersInRoleAsync("Admin");
+            foreach (var admin in admins)
+            {
+                var user = new User();
+                user.Email = admin.Email;
+                user.Username = admin.UserName;
+                user.Role = "Admin";
+                users.Add(user);
+            }
+            var writers = await userManager.GetUsersInRoleAsync("Writer");
+            foreach (var writer in writers)
+            {
+                var user = new User();
+                user.Email = writer.Email;
+                user.Username = writer.UserName;
+                user.Role = "Admin";
+                users.Add(user);
+            }
+            var readers = await userManager.GetUsersInRoleAsync("Reader");
+            foreach (var reader in readers)
+            {
+                var user = new User();
+                user.Email = reader.Email;
+                user.Username = reader.UserName;
+                user.Role = "Admin";
+                users.Add(user);
+            }
+            return users;
         }
     }
 }
