@@ -49,9 +49,12 @@ const Users = () => {
                 username: username,
                 password: password,
                 passwordConfirm: confirmPassword
-            })
+            },
+            {headers: {"Authentication": "Bearer " + localStorage.getItem("token")}})
               .then((response)=>{
                 handleSuccess("Created new user!");
+                
+                //TODO: refresh users
               })
               .catch((error)=>{
                 console.log(error)
