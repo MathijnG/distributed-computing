@@ -54,9 +54,9 @@ namespace DcApi.Services
             if (result.Succeeded)
             {
                 var currentUser = await userManager.FindByNameAsync(model.Username);
-                if (!await roleManager.RoleExistsAsync("Reader"))
+                if (!await roleManager.RoleExistsAsync("Admin"))
                 {
-                    await roleManager.CreateAsync(new IdentityRole("Reader"));
+                    await roleManager.CreateAsync(new IdentityRole("Admin"));
                 }
 
                 await userManager.AddToRoleAsync(currentUser, "Reader");
