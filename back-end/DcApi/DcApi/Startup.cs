@@ -18,7 +18,7 @@ namespace DcApi
 {
     public class Startup
     {
-        private string connectionString = "server=localhost;port=3306;database=DcDb;uid=identityuser;password=";
+        private string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
         public Startup(IConfiguration configuration)
         {
