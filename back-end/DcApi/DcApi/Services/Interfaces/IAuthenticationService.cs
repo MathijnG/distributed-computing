@@ -10,5 +10,7 @@ namespace DcApi.Services.Interfaces
         Task<SignInResponse> SignUpAsync(SignUpModel model);
 
         Task<List<User>> GetUsers();
+
+        JwtValidation ValidateJwt(string token);
     }
 }

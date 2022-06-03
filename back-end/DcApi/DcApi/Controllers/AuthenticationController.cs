@@ -43,6 +43,7 @@ namespace DcApi.Controllers
         }
 
         [HttpPost("signup")]
+        [Authorize(Roles = "Admin")]
         public async Task<SignInResponse> SignUpAsync([FromBody] SignUpModel model)
         {
             try
@@ -61,7 +62,8 @@ namespace DcApi.Controllers
         }
 
         [HttpGet("users")]
-        public  Task<List<User>> GetUsers()
+        [Authorize(Roles = "Admin")]
+        public Task<List<User>> GetUsers()
         {
             try
             {
@@ -71,6 +73,16 @@ namespace DcApi.Controllers
             {
                 throw;
             }
+        }
+
+        [HttpPost("validate")]
+        public JwtValidation ValidateJwt([FromBody] string token)
+        {
+            if (jwtService.ValidateToken(token))
+            {
+                return new JwtValidation() { isValid = true };
+            }
+            return new JwtValidation() { isValid = false };
         }
     }
 }
