@@ -81,9 +81,9 @@ namespace DcApi
                       ValidateIssuer = true,
                       ValidateAudience = true,
                       ValidateIssuerSigningKey = true,
-                      ValidIssuer = Configuration.GetSection("JwtIssuer").Value,
-                      ValidAudience = Configuration.GetSection("JwtIssuer").Value,
-                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("JwtKey").Value))
+                      ValidIssuer = Environment.GetEnvironmentVariable("JWT_KEY"),
+                      ValidAudience = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")))
                   };
               });
 

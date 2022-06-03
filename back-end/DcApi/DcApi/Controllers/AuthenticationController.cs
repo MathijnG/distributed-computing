@@ -1,6 +1,7 @@
 ﻿using DcApi.Exceptions;
 using DcApi.Logic;
 using DcApi.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -56,6 +57,19 @@ namespace DcApi.Controllers
                     Message = e.Message,
                     Token = null,
                 };
+            }
+        }
+
+        [HttpGet("users")]
+        public  Task<List<User>> GetUsers()
+        {
+            try
+            {
+                return authService.GetUsers();
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }
