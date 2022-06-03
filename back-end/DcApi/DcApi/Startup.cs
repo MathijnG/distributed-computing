@@ -23,6 +23,8 @@ namespace DcApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Console.WriteLine("jwtkey: " + Environment.GetEnvironmentVariable("JWT_KEY"));
+            Console.WriteLine("jwtissuer: " + Environment.GetEnvironmentVariable("JWT_ISSUER"));
         }
 
         public IConfiguration Configuration { get; }
