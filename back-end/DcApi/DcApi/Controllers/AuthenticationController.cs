@@ -76,9 +76,9 @@ namespace DcApi.Controllers
         }
 
         [HttpPost("validate")]
-        public JwtValidation ValidateJwt([FromBody] string token)
+        public JwtValidation ValidateJwt([FromBody] TokenContainer token)
         {
-            if (jwtService.ValidateToken(token))
+            if (jwtService.ValidateToken(token.Token))
             {
                 return new JwtValidation() { isValid = true };
             }
