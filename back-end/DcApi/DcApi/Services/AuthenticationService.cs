@@ -94,7 +94,7 @@ namespace DcApi.Services
             }
         }
 
-        public async List<User> GetUsers()
+        public async Task<List<User>> GetUsers()
         {
             List<User> users = new List<User>();
             var admins = await userManager.GetUsersInRoleAsync("Admin");
