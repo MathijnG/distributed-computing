@@ -13,7 +13,6 @@ namespace DcApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class CodeController : ControllerBase
     {
         [HttpPost("push")]

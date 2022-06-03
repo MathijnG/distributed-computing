@@ -43,7 +43,6 @@ namespace DcApi.Controllers
         }
 
         [HttpPost("signup")]
-        [Authorize(Roles = "Admin")]
         public async Task<SignInResponse> SignUpAsync([FromBody] SignUpModel model)
         {
             try
