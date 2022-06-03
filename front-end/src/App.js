@@ -1,66 +1,74 @@
-import {useEffect, useState} from "react";
-import {Container,Row,Button,Col,Form} from "react-bootstrap";
-import CodeEditor from '@uiw/react-textarea-code-editor';
-import axios from "axios";
+import {useEffect, useState, Fragment} from "react";
+import Home from "./Home";
+import Login from "./Login";
+import Users from "./Users";
+import {Navbar, Container, NavDropdown, Nav, Row} from "react-bootstrap";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
-  const [code, setCode] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showUsers, setShowUsers] = useState(false);
 
-  const submitCode = (e) => {
-    e.preventDefault();
+  useEffect(()=>{
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [isLoggedIn])
 
-    const formData = new FormData();
-    formData.append("selectedFile", selectedFile);
-
-    axios.post("/api/submit", formData, {headers: {"Content-Type": "multipart/form-data"}})
-      .then((response)=>{
-        //console.log(response);
-        //setCode(response)
-      })
-      .catch((error)=>{
-        //console.log(error)
-      })
+  const changeLogin = (value) => {
+    setIsLoggedIn(value);
   }
 
-  const handleFileSelect = (e) => {
-    setSelectedFile(e.target.files[0]);
+  const logout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("token");
   }
 
   return (
     <div className="App">
-      <Container style={{padding: "5rem", height: "100vh"}}>
-        <Row style={{height: "100%"}}>
-          <Col style={{padding: "3rem", margin: "auto"}}>
-              <h1>Distributed computing</h1>
-              <p>The python code you submit will be distributed on a cluster of several workstations to improve performance.</p>
-              <Form>
-                <Form.Group className="mb-3">
-                  <Form.Control type="file" accept=".py" onChange={handleFileSelect} />
-                </Form.Group>
-                <div>
-                  <Button type="submit" variant="dark" style={{width:"30%"}} onClick={(e)=>submitCode(e)}>Submit</Button>
-                </div>
-              </Form>
-              <h1 className="mt-5 mb-3">Results</h1>
-              <CodeEditor
-                value={code}
-                language="python"
-                placeholder="Please enter python code here."
-                onChange={(e) => setCode(e.target.value)}
-                padding={15}
-                style={{
-                  borderRadius: 6,
-                  fontSize: 15,
-                  backgroundColor: "#1C1B22",
-                  fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                  marginBottom: "1rem"
-                }}
-              />
-          </Col>
+
+      <ToastContainer />
+
+      {isLoggedIn && 
+        <Navbar bg="light" expand="lg">
+          <Container>
+            <Navbar.Brand>Distributed computing</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link onClick={()=>setShowUsers(false)}>Home</Nav.Link>
+                <Nav.Link onClick={()=>setShowUsers(true)}>Users</Nav.Link>
+              </Nav>
+              <Nav>
+                <Nav.Link onClick={()=>logout()}>Logout</Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+      }
+
+      <Container style={{paddingTop: "5rem", height: "100vh"}}>
+        <Row /*style={{height: "100%"}}*/>
+          {isLoggedIn ? 
+            <Fragment>
+              {showUsers ? 
+                <Users />
+                :
+                <Home />
+              }
+            </Fragment>
+            :
+            <Login changeLogin={changeLogin} />
+          }
         </Row>
       </Container>
+
+      
     </div>
   );
 }
