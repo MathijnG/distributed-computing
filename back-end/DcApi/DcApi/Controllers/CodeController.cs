@@ -7,11 +7,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DcApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CodeController : ControllerBase
     {
         [HttpPost("push")]

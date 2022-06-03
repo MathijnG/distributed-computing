@@ -1,7 +1,11 @@
+using DcApi.Persistency;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +17,9 @@ namespace DcApi
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            CreateDatabase(host);
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -22,5 +28,24 @@ namespace DcApi
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        private static void CreateDatabase(IHost host)
+        {
+            var policy = Policy.Handle<Exception>()
+                .WaitAndRetry(10, retryCount =>
+                        TimeSpan.FromSeconds(Math.Pow(2, retryCount)),
+                        (exception, timeSpan, context) =>
+                        {
+                            Console.WriteLine($"Failed to connect to database, retrying. \n Retrying in {timeSpan}");
+                        }
+                       );
+
+
+            using (var serviceScope = host.Services.CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                policy.Execute(() => context.Database.Migrate());
+            }
+        }
     }
 }
