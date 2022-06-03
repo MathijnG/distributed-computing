@@ -14,6 +14,7 @@
     "react-dom": "^18.1.0",
     "react-dropzone": "^14.2.1",
     "react-scripts": "5.0.1",
+    "uploader": "^1.45.14",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
