@@ -52,8 +52,8 @@ function App() {
         </Navbar>
       }
 
-      <Container style={{paddingTop: "5rem", height: "100vh"}}>
-        <Row /*style={{height: "100%"}}*/>
+      <Container style={{paddingTop: "5rem", height: "90vh"}}>
+        <Row>
           {isLoggedIn ? 
             <Fragment>
               {showUsers ? 

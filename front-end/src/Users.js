@@ -1,11 +1,99 @@
-import {Fragment} from "react";
-import {Table, Dropdown, Button, Row, Col} from "react-bootstrap";
+import {Fragment, useEffect, useState} from "react";
+import {Table, Dropdown, Button, Form, Modal} from "react-bootstrap";
+import { handleError, handleSuccess } from "./errors";
+import axios from "axios";
 
 const Users = () => {
+    
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    useEffect(()=>{
+        //TODO: fetch users
+    },[])
+
+    const Signup = (e) => {
+        e.preventDefault();
+  
+        if (email && username && password && confirmPassword) {
+            axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/signup", {
+                email: email,
+                username: username,
+                password: password,
+                passwordConfirm: confirmPassword
+            })
+              .then((response)=>{
+                handleSuccess("Created new user!");
+              })
+              .catch((error)=>{
+                console.log(error)
+              })
+        } else {
+            handleError("Please fill in all the fields!")
+        }
+    }
+
+    const getUsers = () => {
+        axios.get(process.env.REACT_APP_BACKEND + "/api/")
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                handleError(error.message);
+            })
+    }
+
     return (
         <Fragment>
+
+            <Modal show={show} onHide={handleClose} centered size="lg">
+                <Form onSubmit={Signup}>
+              <Modal.Header closeButton>
+                <Modal.Title>Create new user</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Email address *</Form.Label>
+                      <Form.Control value={email} onChange={(e)=>{setEmail(e.target.value)}} type="email" placeholder="Enter email" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Username *</Form.Label>
+                      <Form.Control value={username} onChange={(e)=>{setUsername(e.target.value)}} type="email" placeholder="Enter username" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Password *</Form.Label>
+                      <Form.Control value={password} onChange={(e)=>{setPassword(e.target.value)}} type="password" placeholder="Password" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Confirm password *</Form.Label>
+                      <Form.Control value={confirmPassword} onChange={(e)=>{setConfirmPassword(e.target.value)}} type="password" placeholder="Confirm password" />
+                    </Form.Group>
+                
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                  Close
+                </Button>
+                <Button variant="primary" type="submit" onClick={handleClose}>
+                  Save Changes
+                </Button>
+              </Modal.Footer>
+              </Form>
+            </Modal>
+
             <div className="mb-3">
-                <Button style={{float: "right"}}>New user</Button>
+                <Button style={{float: "right"}} onClick={()=>{handleShow()}}>New user</Button>
             </div>
             <Table striped bordered hover>
               <thead>

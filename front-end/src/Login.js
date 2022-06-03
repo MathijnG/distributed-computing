@@ -12,7 +12,7 @@ const Login = ({data}) => {
         e.preventDefault();
     
         if (email && password) {
-          axios.post(process.env.REACT_APP_BACKEND + "/api/autentication/signin", {email: email, password: password})
+          axios.post(process.env.REACT_APP_BACKEND + "/api/Autentication/signin", {email: email, password: password})
             .then((response)=>{
               console.log(response);
               localStorage.setItem("token", response.data.token)
