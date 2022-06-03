@@ -54,12 +54,13 @@ namespace DcApi.Services
             if (result.Succeeded)
             {
                 var currentUser = await userManager.FindByNameAsync(model.Username);
-                if (!await roleManager.RoleExistsAsync("Admin"))
+                var role = "Reader";
+                if (!await roleManager.RoleExistsAsync(role))
                 {
-                    await roleManager.CreateAsync(new IdentityRole("Admin"));
+                    await roleManager.CreateAsync(new IdentityRole(role));
                 }
 
-                await userManager.AddToRoleAsync(currentUser, "Admin");
+                await userManager.AddToRoleAsync(currentUser, role);
                 var token = jwtService.GenerateJwt(currentUser, await userManager.GetRolesAsync(user));
                 return new SignInResponse() { Success = true, Token = token };
             }
