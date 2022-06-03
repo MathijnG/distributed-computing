@@ -1,5 +1,5 @@
 import {Fragment} from "react";
-import {Table} from "react-bootstrap";
+import {Table, Dropdown} from "react-bootstrap";
 
 const Users = () => {
     return (
@@ -14,19 +14,55 @@ const Users = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
+                  <td>test@email.com</td>
+                  <td>TestUser1</td>
+                  <td>
+                      <Dropdown>
+                        <Dropdown.Toggle variant="primary">
+                          Admin
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                          <Dropdown.Item>Reader</Dropdown.Item>
+                          <Dropdown.Item>Writer</Dropdown.Item>
+                          <Dropdown.Item>Admin</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                  </td>
                 </tr>
                 <tr>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
+                  <td>test@email.com</td>
+                  <td>TestUser2</td>
+                  <td>
+                      <Dropdown>
+                        <Dropdown.Toggle variant="primary">
+                        Writer
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                          <Dropdown.Item>Reader</Dropdown.Item>
+                          <Dropdown.Item>Writer</Dropdown.Item>
+                          <Dropdown.Item>Admin</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                  </td>
                 </tr>
                 <tr>
-                  <td>3</td>
-                  <td>Jacob</td>
-                  <td>@twitter</td>
+                  <td>test@email.com</td>
+                  <td>TestUser3</td>
+                  <td>
+                      <Dropdown>
+                        <Dropdown.Toggle variant="primary">
+                          Reader
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                          <Dropdown.Item>Reader</Dropdown.Item>
+                          <Dropdown.Item>Writer</Dropdown.Item>
+                          <Dropdown.Item>Admin</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                  </td>
                 </tr>
               </tbody>
             </Table>

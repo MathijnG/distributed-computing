@@ -16,7 +16,8 @@ const Login = ({data}) => {
           {email: email, password: password}, 
           {headers: {"Content-Type": "multipart/form-data"}})
             .then((response)=>{
-              localStorage.setItem("token", "nersiopgnerup")
+              console.log(response);
+              localStorage.setItem("token", response.data.token)
               data.changeLogin(true);
             })
             .catch((error)=>{

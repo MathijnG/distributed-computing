@@ -53,7 +53,7 @@ function App() {
       }
 
       <Container style={{paddingTop: "5rem", height: "100vh"}}>
-        <Row style={{height: "100%"}}>
+        <Row /*style={{height: "100%"}}*/>
           {isLoggedIn ? 
             <Fragment>
               {showUsers ? 
