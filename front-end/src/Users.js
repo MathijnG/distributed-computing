@@ -6,6 +6,7 @@ import axios from "axios";
 const Users = () => {
     
     const [show, setShow] = useState(false);
+    const [users, setUsers] = useState(null);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -15,8 +16,27 @@ const Users = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    
     useEffect(()=>{
-        //TODO: fetch users
+
+        axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/validate", {
+            token: localStorage.getItem("token")
+        })
+            .then((response) => {
+                console.log(response)
+            })
+            .catch((error) => {
+                handleError(error.message);
+            })
+
+        //axios.get(process.env.REACT_APP_BACKEND + "/api/Authentication/users")
+        //    .then((response) => {
+        //        console.log(response);
+        //        setUsers(response.data);
+        //    })
+        //    .catch((error) => {
+        //        handleError(error.message);
+        //    })
     },[])
 
     const Signup = (e) => {
@@ -38,16 +58,6 @@ const Users = () => {
         } else {
             handleError("Please fill in all the fields!")
         }
-    }
-
-    const getUsers = () => {
-        axios.get(process.env.REACT_APP_BACKEND + "/api/")
-            .then((response) => {
-                return response.data;
-            })
-            .catch((error) => {
-                handleError(error.message);
-            })
     }
 
     return (
@@ -104,7 +114,33 @@ const Users = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                  {users && 
+                    users.map((user) => {
+                        return (
+                            <Fragment>
+                                <tr>
+                                    <td>{user.email}</td>
+                                    <td>{user.username}</td>
+                                    <td>
+                                        <Dropdown>
+                                        <Dropdown.Toggle variant="primary">
+                                            {user.role}
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item>Reader</Dropdown.Item>
+                                            <Dropdown.Item>Writer</Dropdown.Item>
+                                            <Dropdown.Item>Admin</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                        </Dropdown>
+                                    </td>
+                                </tr>
+                            </Fragment>
+                        )
+                    })
+                  }
+                
+                {/* <tr>
                   <td>test@email.com</td>
                   <td>TestUser1</td>
                   <td>
@@ -132,7 +168,7 @@ const Users = () => {
 
                         <Dropdown.Menu>
                           <Dropdown.Item>Reader</Dropdown.Item>
-                          <Dropdown.Item>Writer</Dropdown.Item>
+                          <Dropdown.Itewm>Writer</Dropdown.Item>
                           <Dropdown.Item>Admin</Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
@@ -154,7 +190,7 @@ const Users = () => {
                         </Dropdown.Menu>
                       </Dropdown>
                   </td>
-                </tr>
+                </tr> */}
               </tbody>
             </Table>
         </Fragment>
