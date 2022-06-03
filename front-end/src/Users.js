@@ -1,9 +1,12 @@
 import {Fragment} from "react";
-import {Table, Dropdown} from "react-bootstrap";
+import {Table, Dropdown, Button, Row, Col} from "react-bootstrap";
 
 const Users = () => {
     return (
         <Fragment>
+            <div className="mb-3">
+                <Button style={{float: "right"}}>New user</Button>
+            </div>
             <Table striped bordered hover>
               <thead>
                 <tr>
