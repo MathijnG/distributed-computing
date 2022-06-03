@@ -45,10 +45,10 @@ const Users = () => {
   
         if (email && username && password && confirmPassword) {
             axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/signup", {
-                email: email,
-                username: username,
-                password: password,
-                passwordConfirm: confirmPassword
+                Email: email,
+                Username: username,
+                Password: password,
+                ConfirmPassword: confirmPassword
             },
             {headers: {"Authorization": "Bearer " + localStorage.getItem("token")}})
               .then((response)=>{
