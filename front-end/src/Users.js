@@ -29,7 +29,8 @@ const Users = () => {
                 handleError(error.message);
             })
 
-        axios.get(process.env.REACT_APP_BACKEND + "/api/Authentication/users", {headers: {"Authentication": "Bearer " + localStorage.getItem("token")}})
+        axios.get(process.env.REACT_APP_BACKEND + "/api/Authentication/users", 
+        {headers: {"Authentication": "Bearer " + localStorage.getItem("token")}})
            .then((response) => {
                console.log(response);
                setUsers(response.data);
