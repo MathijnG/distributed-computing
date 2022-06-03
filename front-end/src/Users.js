@@ -29,14 +29,14 @@ const Users = () => {
                 handleError(error.message);
             })
 
-        axios.get(process.env.REACT_APP_BACKEND + "/api/Authentication/users")
-            .then((response) => {
-                console.log(response);
-                setUsers(response.data);
-            })
-            .catch((error) => {
-                handleError(error.message);
-            })
+        //axios.get(process.env.REACT_APP_BACKEND + "/api/Authentication/users")
+        //    .then((response) => {
+        //        console.log(response);
+        //        setUsers(response.data);
+        //    })
+        //    .catch((error) => {
+        //        handleError(error.message);
+        //    })
     },[])
 
     const Signup = (e) => {
