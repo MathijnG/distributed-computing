@@ -19,15 +19,15 @@ const Users = () => {
     
     useEffect(()=>{
 
-        axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/validate", {
-            Token: localStorage.getItem("token")
-        })
-            .then((response) => {
-                console.log(response)
-            })
-            .catch((error) => {
-                handleError(error.message);
-            })
+        // axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/validate", {
+        //     Token: localStorage.getItem("token")
+        // })
+        //     .then((response) => {
+        //         console.log(response)
+        //     })
+        //     .catch((error) => {
+        //         handleError(error.message);
+        //     })
 
         axios.get(process.env.REACT_APP_BACKEND + "/api/Authentication/users", 
         {headers: {"Authorization": "Bearer " + localStorage.getItem("token")}})
@@ -81,7 +81,7 @@ const Users = () => {
 
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                       <Form.Label>Username *</Form.Label>
-                      <Form.Control value={username} onChange={(e)=>{setUsername(e.target.value)}} type="email" placeholder="Enter username" />
+                      <Form.Control value={username} onChange={(e)=>{setUsername(e.target.value)}} type="text" placeholder="Enter username" />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicPassword">
