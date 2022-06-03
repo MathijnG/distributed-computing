@@ -59,7 +59,7 @@ namespace DcApi.Services
                     await roleManager.CreateAsync(new IdentityRole("Admin"));
                 }
 
-                await userManager.AddToRoleAsync(currentUser, "Reader");
+                await userManager.AddToRoleAsync(currentUser, "Admin");
                 var token = jwtService.GenerateJwt(currentUser, await userManager.GetRolesAsync(user));
                 return new SignInResponse() { Success = true, Token = token };
             }
