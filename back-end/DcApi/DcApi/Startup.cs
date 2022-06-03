@@ -80,8 +80,8 @@ namespace DcApi
               {
                   options.TokenValidationParameters = new TokenValidationParameters
                   {
-                      ValidateIssuer = true,
-                      ValidateAudience = true,
+                      ValidateIssuer = false,
+                      ValidateAudience = false,
                       ValidateIssuerSigningKey = true,
                       ValidIssuer = jwtIssuer,
                       ValidAudience = jwtIssuer,
