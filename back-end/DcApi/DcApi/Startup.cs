@@ -23,8 +23,6 @@ namespace DcApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Console.WriteLine("jwtkey: " + Environment.GetEnvironmentVariable("JWT_KEY"));
-            Console.WriteLine("jwtissuer: " + Environment.GetEnvironmentVariable("JWT_ISSUER"));
         }
 
         public IConfiguration Configuration { get; }
@@ -85,7 +83,7 @@ namespace DcApi
                       ValidateIssuerSigningKey = true,
                       ValidIssuer = Environment.GetEnvironmentVariable("JWT_KEY"),
                       ValidAudience = Environment.GetEnvironmentVariable("JWT_ISSUER"),
-                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("JwtKey").Value))
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")))
                   };
               });
 
