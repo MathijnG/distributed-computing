@@ -114,29 +114,32 @@ const Users = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => {
-                    return (
-                        <Fragment>
-                            <tr>
-                                <td>{user.email}</td>
-                                <td>{user.username}</td>
-                                <td>
-                                    <Dropdown>
-                                      <Dropdown.Toggle variant="primary">
-                                        {user.role}
-                                      </Dropdown.Toggle>
+                  {users && 
+                    users.map((user) => {
+                        return (
+                            <Fragment>
+                                <tr>
+                                    <td>{user.email}</td>
+                                    <td>{user.username}</td>
+                                    <td>
+                                        <Dropdown>
+                                        <Dropdown.Toggle variant="primary">
+                                            {user.role}
+                                        </Dropdown.Toggle>
 
-                                      <Dropdown.Menu>
-                                        <Dropdown.Item>Reader</Dropdown.Item>
-                                        <Dropdown.Item>Writer</Dropdown.Item>
-                                        <Dropdown.Item>Admin</Dropdown.Item>
-                                      </Dropdown.Menu>
-                                    </Dropdown>
-                                </td>
-                            </tr>
-                        </Fragment>
-                    )
-                })}
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item>Reader</Dropdown.Item>
+                                            <Dropdown.Item>Writer</Dropdown.Item>
+                                            <Dropdown.Item>Admin</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                        </Dropdown>
+                                    </td>
+                                </tr>
+                            </Fragment>
+                        )
+                    })
+                  }
+                
                 {/* <tr>
                   <td>test@email.com</td>
                   <td>TestUser1</td>
