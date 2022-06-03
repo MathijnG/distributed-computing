@@ -112,7 +112,7 @@ namespace DcApi.Services
                 var user = new User();
                 user.Email = writer.Email;
                 user.Username = writer.UserName;
-                user.Role = "Admin";
+                user.Role = "Writer";
                 users.Add(user);
             }
             var readers = await userManager.GetUsersInRoleAsync("Reader");
@@ -121,7 +121,7 @@ namespace DcApi.Services
                 var user = new User();
                 user.Email = reader.Email;
                 user.Username = reader.UserName;
-                user.Role = "Admin";
+                user.Role = "Reader";
                 users.Add(user);
             }
             return users;
