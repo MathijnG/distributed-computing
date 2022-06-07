@@ -5,6 +5,7 @@ import Users from "./Users";
 import {Navbar, Container, NavDropdown, Nav, Row} from "react-bootstrap";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import jwt_decode from "jwt-decode";
 
 function App() {
 
@@ -14,6 +15,10 @@ function App() {
   useEffect(()=>{
     const token = localStorage.getItem("token");
     if (token) {
+
+      let decodedToken = jwt_decode(token);
+      console.log(decodedToken);
+
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
@@ -52,8 +57,8 @@ function App() {
         </Navbar>
       }
 
-      <Container style={{paddingTop: "5rem", height: "100vh"}}>
-        <Row /*style={{height: "100%"}}*/>
+      <Container style={{paddingTop: "5rem", height: "90vh"}}>
+        <Row>
           {isLoggedIn ? 
             <Fragment>
               {showUsers ? 

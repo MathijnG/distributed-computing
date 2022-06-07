@@ -1,6 +1,7 @@
 ﻿using DcApi.Exceptions;
 using DcApi.Logic;
 using DcApi.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -42,6 +43,7 @@ namespace DcApi.Controllers
         }
 
         [HttpPost("signup")]
+        [Authorize (Roles = "Admin")]
         public async Task<SignInResponse> SignUpAsync([FromBody] SignUpModel model)
         {
             try
@@ -57,6 +59,30 @@ namespace DcApi.Controllers
                     Token = null,
                 };
             }
+        }
+
+        [HttpGet("users")]
+        [Authorize(Roles = "Admin")]
+        public Task<List<User>> GetUsers()
+        {
+            try
+            {
+                return authService.GetUsers();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost("validate")]
+        public JwtValidation ValidateJwt([FromBody] TokenContainer token)
+        {
+            if (jwtService.ValidateToken(token.Token))
+            {
+                return new JwtValidation() { isValid = true };
+            }
+            return new JwtValidation() { isValid = false };
         }
     }
 }
