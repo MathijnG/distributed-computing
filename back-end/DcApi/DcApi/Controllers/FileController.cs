@@ -35,6 +35,7 @@ namespace DcApi.Controllers
                 start.UseShellExecute = false;
                 start.RedirectStandardOutput = true;
 
+                Process.Start(start);
                 return Ok();
             }
             return BadRequest();
