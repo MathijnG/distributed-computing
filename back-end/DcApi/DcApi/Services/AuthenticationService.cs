@@ -148,13 +148,14 @@ namespace DcApi.Services
 
         }
 
-        public async Task<string> GetRoles()
+        public List<string> GetRoles()
         {
             var roles = new List<string>();
             foreach(var role in roleManager.Roles)
             {
                 roles.Add(role.Name);
             }
+            return roles;
         }
     }
 }
