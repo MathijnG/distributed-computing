@@ -14,9 +14,12 @@ const Login = ({changeLogin}) => {
         if (email && password) {
           axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/signin", {Email: email, Password: password})
             .then((response)=>{
-              console.log(response);
-              localStorage.setItem("token", response.data.token)
-              changeLogin(true);
+              if(response.data.success === false || !response.data.token) {
+                handleError(response.data.message);
+              } else {
+                localStorage.setItem("token", response.data.token)
+                changeLogin(true);
+              }
             })
             .catch((error)=>{
                 handleError(error.message);
