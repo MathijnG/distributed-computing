@@ -1,5 +1,5 @@
 import {Fragment, useEffect, useState} from "react";
-import {Table, Dropdown, Button, Form, Modal} from "react-bootstrap";
+import {Table, Dropdown, Button, Form, Modal, DropdownButton} from "react-bootstrap";
 import { handleError, handleSuccess } from "./errors";
 import axios from "axios";
 
@@ -29,15 +29,7 @@ const Users = () => {
         //         handleError(error.message);
         //     })
 
-        axios.get(process.env.REACT_APP_BACKEND + "/api/Authentication/users", 
-        {headers: {"Authorization": "Bearer " + localStorage.getItem("token")}})
-           .then((response) => {
-               console.log(response);
-               setUsers(response.data);
-           })
-           .catch((error) => {
-               handleError(error.message);
-           })
+        fetchUsers();
     },[])
 
     const Signup = (e) => {
@@ -52,9 +44,14 @@ const Users = () => {
             },
             {headers: {"Authorization": "Bearer " + localStorage.getItem("token")}})
               .then((response)=>{
-                handleSuccess("Created new user!");
-                
-                //TODO: refresh users
+
+                if(response.data.success === false) {
+                   handleError(response.data.message);
+                } else {
+                  handleSuccess("Created new user successfully!");
+                }
+
+                fetchUsers();
               })
               .catch((error)=>{
                 console.log(error)
@@ -62,6 +59,30 @@ const Users = () => {
         } else {
             handleError("Please fill in all the fields!")
         }
+    }
+
+    const fetchUsers = () => {
+      axios.get(process.env.REACT_APP_BACKEND + "/api/Authentication/users", 
+        {headers: {"Authorization": "Bearer " + localStorage.getItem("token")}})
+           .then((response) => {
+               setUsers(response.data);
+           })
+           .catch((error) => {
+               handleError(error.message);
+           })
+    }
+
+    const updateRole = (role, email) => {
+      console.log(role + " " + email);
+      // axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/update-role", {role: role},
+      //   {headers: {"Authorization": "Bearer " + localStorage.getItem("token")}})
+      //     .then((response) => {
+      //       fetchUsers();
+      //       handleSuccess("Updated role successfully!")
+      //     })
+      //     .catch((error) => {
+      //       handleError("Failed to update role.")
+      //     })
     }
 
     return (
@@ -74,22 +95,22 @@ const Users = () => {
               </Modal.Header>
               <Modal.Body>
                 
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3">
                       <Form.Label>Email address *</Form.Label>
                       <Form.Control value={email} onChange={(e)=>{setEmail(e.target.value)}} type="email" placeholder="Enter email" />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3">
                       <Form.Label>Username *</Form.Label>
                       <Form.Control value={username} onChange={(e)=>{setUsername(e.target.value)}} type="text" placeholder="Enter username" />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Group className="mb-3">
                       <Form.Label>Password *</Form.Label>
                       <Form.Control value={password} onChange={(e)=>{setPassword(e.target.value)}} type="password" placeholder="Password" />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Group className="mb-3">
                       <Form.Label>Confirm password *</Form.Label>
                       <Form.Control value={confirmPassword} onChange={(e)=>{setConfirmPassword(e.target.value)}} type="password" placeholder="Confirm password" />
                     </Form.Group>
@@ -119,23 +140,22 @@ const Users = () => {
               </thead>
               <tbody>
                   {users && 
-                    users.map((user) => {
+                    users.map((user,i) => {
                         return (
-                            <Fragment>
+                            <Fragment key={i}>
                                 <tr>
                                     <td>{user.email}</td>
                                     <td>{user.username}</td>
                                     <td>
-                                        <Dropdown>
-                                        <Dropdown.Toggle variant="primary">
-                                            {user.role}
-                                        </Dropdown.Toggle>
-
-                                        <Dropdown.Menu>
-                                            <Dropdown.Item>Reader</Dropdown.Item>
-                                            <Dropdown.Item>Writer</Dropdown.Item>
-                                            <Dropdown.Item>Admin</Dropdown.Item>
-                                        </Dropdown.Menu>
+                                        <Dropdown onSelect={(key, e)=>{updateRole(e.target.attributes.eventkey.value, user.email)}}>
+                                          <Dropdown.Toggle variant="primary">
+                                              {user.role}
+                                          </Dropdown.Toggle>
+                                           <Dropdown.Menu>
+                                              <Dropdown.Item eventkey="Reader">Reader</Dropdown.Item>
+                                              <Dropdown.Item eventkey="Writer">Writer</Dropdown.Item>
+                                              <Dropdown.Item eventkey="Admin">Admin</Dropdown.Item>
+                                          </Dropdown.Menu>
                                         </Dropdown>
                                     </td>
                                 </tr>
