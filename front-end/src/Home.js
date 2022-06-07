@@ -64,7 +64,7 @@ const Home = ({role}) => {
     };
 
     const handleToggle = () => {
-      console.log("toggle");
+      setShowFileUpload(!showFileUpload);
     }
 
     return (
@@ -81,7 +81,7 @@ const Home = ({role}) => {
                 <Container >
                   <Row>
                     <Col style={{display: "flex", textAlign: "center", justifyContent: "center"}}>
-                      <p>Code upload</p><Form.Check style={{fontSize: "20px"}} onClick={handleToggle} type="switch"/><p>File upload</p>
+                      <p>File upload</p><Form.Check style={{fontSize: "20px"}} onClick={handleToggle} type="switch"/><p>Code upload</p>
                     </Col>
                   </Row>
 
