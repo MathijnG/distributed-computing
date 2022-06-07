@@ -1,9 +1,9 @@
-import {Fragment, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import {Button, Form, Row, Container, Col} from "react-bootstrap";
 import axios from "axios";
 import {handleError} from "./errors";
 
-const Login = ({data}) => {
+const Login = ({changeLogin}) => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -12,11 +12,11 @@ const Login = ({data}) => {
         e.preventDefault();
     
         if (email && password) {
-          axios.post(process.env.REACT_APP_BACKEND + "/api/autentication/signin", {email: email, password: password})
+          axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/signin", {Email: email, Password: password})
             .then((response)=>{
               console.log(response);
               localStorage.setItem("token", response.data.token)
-              data.changeLogin(true);
+              changeLogin(true);
             })
             .catch((error)=>{
                 handleError(error.message);

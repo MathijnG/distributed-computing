@@ -5,15 +5,21 @@ import Users from "./Users";
 import {Navbar, Container, NavDropdown, Nav, Row} from "react-bootstrap";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import jwt_decode from "jwt-decode";
 
 function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
+  const [role, setRole] = useState("");
 
   useEffect(()=>{
     const token = localStorage.getItem("token");
     if (token) {
+
+      let decodedToken = jwt_decode(token);
+      setRole(decodedToken.role);
+
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
@@ -42,7 +48,7 @@ function App() {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 <Nav.Link onClick={()=>setShowUsers(false)}>Home</Nav.Link>
-                <Nav.Link onClick={()=>setShowUsers(true)}>Users</Nav.Link>
+                {role === "Admin" && <Nav.Link onClick={()=>setShowUsers(true)}>Users</Nav.Link>}
               </Nav>
               <Nav>
                 <Nav.Link onClick={()=>logout()}>Logout</Nav.Link>
@@ -52,14 +58,14 @@ function App() {
         </Navbar>
       }
 
-      <Container style={{paddingTop: "5rem", height: "100vh"}}>
-        <Row /*style={{height: "100%"}}*/>
+      <Container style={{paddingTop: "5rem", height: "90vh"}}>
+        <Row>
           {isLoggedIn ? 
             <Fragment>
               {showUsers ? 
                 <Users />
                 :
-                <Home />
+                <Home role={role} />
               }
             </Fragment>
             :

@@ -19,6 +19,8 @@ namespace DcApi
     public class Startup
     {
         private string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+        private string jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+        private string jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
 
         public Startup(IConfiguration configuration)
         {
@@ -78,12 +80,12 @@ namespace DcApi
               {
                   options.TokenValidationParameters = new TokenValidationParameters
                   {
-                      ValidateIssuer = true,
-                      ValidateAudience = true,
+                      ValidateIssuer = false,
+                      ValidateAudience = false,
                       ValidateIssuerSigningKey = true,
-                      ValidIssuer = Environment.GetEnvironmentVariable("JWT_KEY"),
-                      ValidAudience = Environment.GetEnvironmentVariable("JWT_ISSUER"),
-                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")))
+                      ValidIssuer = jwtIssuer,
+                      ValidAudience = jwtIssuer,
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
                   };
               });
 
@@ -95,6 +97,7 @@ namespace DcApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            RoleData.SeedRoles(app.ApplicationServices).Wait();
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DcApi v1"));

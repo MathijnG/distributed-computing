@@ -54,12 +54,13 @@ namespace DcApi.Services
             if (result.Succeeded)
             {
                 var currentUser = await userManager.FindByNameAsync(model.Username);
-                if (!await roleManager.RoleExistsAsync("Player"))
+                var role = "Reader";
+                if (!await roleManager.RoleExistsAsync(role))
                 {
-                    await roleManager.CreateAsync(new IdentityRole("Player"));
+                    await roleManager.CreateAsync(new IdentityRole(role));
                 }
 
-                await userManager.AddToRoleAsync(currentUser, "Player");
+                await userManager.AddToRoleAsync(currentUser, role);
                 var token = jwtService.GenerateJwt(currentUser, await userManager.GetRolesAsync(user));
                 return new SignInResponse() { Success = true, Token = token };
             }
@@ -92,6 +93,69 @@ namespace DcApi.Services
             {
                 throw new BadLoginException("Incorrect Password/Email");
             }
+        }
+
+        public async Task<List<User>> GetUsers()
+        {
+            List<User> users = new List<User>();
+            var admins = await userManager.GetUsersInRoleAsync("Admin");
+            foreach (var admin in admins)
+            {
+                var user = new User();
+                user.Email = admin.Email;
+                user.Username = admin.UserName;
+                user.Role = "Admin";
+                users.Add(user);
+            }
+            var writers = await userManager.GetUsersInRoleAsync("Writer");
+            foreach (var writer in writers)
+            {
+                var user = new User();
+                user.Email = writer.Email;
+                user.Username = writer.UserName;
+                user.Role = "Writer";
+                users.Add(user);
+            }
+            var readers = await userManager.GetUsersInRoleAsync("Reader");
+            foreach (var reader in readers)
+            {
+                var user = new User();
+                user.Email = reader.Email;
+                user.Username = reader.UserName;
+                user.Role = "Reader";
+                users.Add(user);
+            }
+            return users;
+        }
+
+        public async Task<bool> UpdateRole(UpdateUserRole model)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(model.Email);
+                var roles = await userManager.GetRolesAsync(user);
+                foreach (var role in roles)
+                {
+                    await userManager.RemoveFromRoleAsync(user, role);
+                }
+                await userManager.AddToRoleAsync(user, model.Role);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+        public List<string> GetRoles()
+        {
+            var roles = new List<string>();
+            foreach(var role in roleManager.Roles)
+            {
+                roles.Add(role.Name);
+            }
+            return roles;
         }
     }
 }
