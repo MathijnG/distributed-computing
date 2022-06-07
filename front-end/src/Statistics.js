@@ -4,30 +4,29 @@ import axios from 'axios';
 
 const Statistics = () => {
   const [doneApps, setDoneApps] = useState([]);
-  const [runningApps, setRunningApps] = useState([]);
+  const [temp, setTemp] = useState([]);
+  const [data, setData] = useState([]);
 
-  const statsRunning = [
+  const statsDone = [
     {
-      id: 'application_1653992905362_0020',
+      id: 'application_1653992905362_0017',
       name: '',
       attempts: [
         {
           attemptId: '1',
-          startTime: '2022-06-03T12:32:20.351GMT',
-          endTime: '1969-12-31T23:59:59.999GMT',
-          lastUpdated: '2022-06-03T12:32:27.278GMT',
-          duration: 0,
+          startTime: '2022-06-03T08:24:49.966GMT',
+          endTime: '2022-06-03T08:25:52.235GMT',
+          lastUpdated: '2022-06-03T08:25:52.321GMT',
+          duration: 62269,
           sparkUser: 'hadoop',
-          completed: false,
+          completed: true,
           appSparkVersion: '3.2.1',
-          startTimeEpoch: 1654259540351,
-          endTimeEpoch: -1,
-          lastUpdatedEpoch: 1654259547278,
+          startTimeEpoch: 1654244689966,
+          endTimeEpoch: 1654244752235,
+          lastUpdatedEpoch: 1654244752321,
         },
       ],
     },
-  ];
-  const statsDone = [
     {
       id: 'application_1653393292774_0001',
       name: 'PythonPi',
@@ -48,20 +47,20 @@ const Statistics = () => {
       ],
     },
     {
-      id: 'application_1653992905362_0017',
+      id: 'application_1653992905362_0022',
       name: '',
       attempts: [
         {
           attemptId: '1',
-          startTime: '2022-06-03T08:24:49.966GMT',
-          endTime: '2022-06-03T08:25:52.235GMT',
-          lastUpdated: '2022-06-03T08:25:52.321GMT',
-          duration: 62269,
+          startTime: '2022-06-07T08:24:49.966GMT',
+          endTime: '1969-12-31T23:59:59.999GMT',
+          lastUpdated: '2022-06-07T08:25:52.321GMT',
+          duration: 0,
           sparkUser: 'hadoop',
-          completed: true,
+          completed: false,
           appSparkVersion: '3.2.1',
           startTimeEpoch: 1654244689966,
-          endTimeEpoch: 1654244752235,
+          endTimeEpoch: -1,
           lastUpdatedEpoch: 1654244752321,
         },
       ],
@@ -69,46 +68,23 @@ const Statistics = () => {
   ];
 
   useEffect(() => {
-    //   setDoneApps(axios.get(process.env.SPARK_MONITOR + '/api/v1/applications'));
-    //   setRunningApps(axios.get(process.env.SPARK_MONITOR + '/api/v1/applications?status=running'));
-    setDoneApps(statsDone);
-    return () => {};
+    setData(axios.get(process.env.SPARK_MONITOR + '/api/v1/applications'));
+    data.forEach((app) => {
+      var index = data.indexOf(app);
+      if (!app.attempts[0].completed && !temp.includes(app)) {
+        temp.push(app);
+        data.splice(data.indexOf(index));
+      }
+    });
+    var final = temp.concat(data);
+    console.log(temp);
+    setDoneApps(final);
   }, []);
 
   return (
     <Fragment>
       <h3>Statistics</h3>
-      {statsDone.length > 0 ? (
-        <div>
-          <h5>Running</h5>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Start Time</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-
-            {statsDone
-              ? doneApps.map((app) => {
-                  return (
-                    <tbody>
-                      <td>{app.id}</td>
-                      <td>{app.name ? app.name : 'N/A'}</td>
-                      <td>{app.attempts[0].startTime}</td>
-                      <td>
-                        {app.attempts[0].completed ? 'Completed' : 'Running'}
-                      </td>
-                    </tbody>
-                  );
-                })
-              : null}
-          </Table>
-        </div>
-      ) : null}
-      {statsDone.length > 0 ? (
+      {data.length > 0 ? (
         <div>
           <h5>Completed</h5>
           <Table striped bordered hover>
@@ -122,21 +98,25 @@ const Statistics = () => {
               </tr>
             </thead>
 
-            {statsDone
-              ? doneApps.map((app) => {
-                  return (
-                    <tbody>
-                      <td>{app.id}</td>
-                      <td>{app.name ? app.name : 'N/A'}</td>
-                      <td>{app.attempts[0].startTime}</td>
-                      <td>{app.attempts[0].endTime}</td>
-                      <td>
-                        {app.attempts[0].completed ? 'Completed' : 'Running'}
-                      </td>
-                    </tbody>
-                  );
-                })
-              : null}
+            {doneApps.map((app) => {
+              return (
+                <tbody>
+                  <tr>
+                    <td>{app.id}</td>
+                    <td>{app.name ? app.name : 'N/A'}</td>
+                    <td>{app.attempts[0].startTime}</td>
+                    <td>
+                      {app.attempts[0].completed
+                        ? app.attempts[0].endTime
+                        : 'N/A'}
+                    </td>
+                    <td>
+                      {app.attempts[0].completed ? 'Completed' : 'Running'}
+                    </td>
+                  </tr>
+                </tbody>
+              );
+            })}
           </Table>
         </div>
       ) : null}
