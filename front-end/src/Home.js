@@ -11,8 +11,10 @@ const Home = ({role}) => {
     const [result, setResult] = useState("");
     const [title, setTitle] = useState("");
     const [error, setError] = useState(false);
+    const [file, setFile] = useState(null);
     const [success, setSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [showFileUpload, setShowFileUpload] = useState(true);
 
     const submitCode = (e) => {
       e.preventDefault();
@@ -42,6 +44,28 @@ const Home = ({role}) => {
         setError(true);
       }
     }
+    
+    const handleUpload = (event) => {
+      event.preventDefault();
+      console.log(file);
+      const formData = new FormData();
+      formData.append('file', file);
+      // console.log(file);
+      axios
+        .post(process.env.REACT_APP_BACKEND + '/api/File/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    const handleToggle = () => {
+      console.log("toggle");
+    }
 
     return (
         <Fragment>
@@ -55,7 +79,20 @@ const Home = ({role}) => {
                 </Container>
               :
                 <Container >
-                  <Row style={{textAlign: "center"}}>
+                  <Row>
+                    <Col style={{display: "flex", textAlign: "center", justifyContent: "center"}}>
+                      <p>Code upload</p><Form.Check style={{fontSize: "20px"}} onClick={handleToggle} type="switch"/><p>File upload</p>
+                    </Col>
+                  </Row>
+
+                  {showFileUpload ? 
+                    <Row style={{textAlign: "center"}}>
+                    <Col style={{padding: "3rem", margin: "auto"}}>
+                      
+                    </Col>
+                    </Row>
+                    :
+                    <Row style={{textAlign: "center"}}>
                     <Col style={{padding: "3rem", margin: "auto"}}>
                       <h1>Distributed computing</h1>
                       <p>The python code you submit will be distributed on a cluster of several workstations to improve performance.</p>
@@ -89,7 +126,6 @@ const Home = ({role}) => {
                           <Button type="submit" variant="dark" style={{width:"30%"}} onClick={(e)=>submitCode(e)}>Submit</Button>
                         </div>
                       </Form>
-                          
                       {result &&
                         <Fragment>
                           <h1 className="mt-5 mb-3">Results</h1>
@@ -107,8 +143,13 @@ const Home = ({role}) => {
                           />
                         </Fragment>
                       }
-                    </Col>
-                  </Row>
+                      </Col>
+                    </Row>
+                  }
+
+                  
+                          
+                      
                 </Container>}
               </Fragment>}
         <Statistics />

@@ -30,8 +30,6 @@ const Users = ({role, userEmail}) => {
         //         handleError(error.message);
         //     })
 
-        console.log(userEmail);
-
         if (role === "Admin") {
           fetchRoles();
           fetchUsers();
