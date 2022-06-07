@@ -3,7 +3,7 @@ import {Table, Dropdown, Button, Form, Modal, DropdownButton} from "react-bootst
 import { handleError, handleSuccess } from "./errors";
 import axios from "axios";
 
-const Users = ({user}) => {
+const Users = ({role, userEmail}) => {
     
     const [show, setShow] = useState(false);
     const [users, setUsers] = useState(null);
@@ -30,9 +30,13 @@ const Users = ({user}) => {
         //         handleError(error.message);
         //     })
 
-        fetchRoles();
-        fetchUsers();
-    },[])
+        console.log(userEmail);
+
+        if (role === "Admin") {
+          fetchRoles();
+          fetchUsers();
+        }
+    },[role])
 
     const Signup = (e) => {
         e.preventDefault();
@@ -160,7 +164,7 @@ const Users = ({user}) => {
                                     <td>{user.username}</td>
                                     <td>
                                         <Dropdown onSelect={(key, e)=>{updateRole(e.target.attributes.eventkey.value, user.email)}}>
-                                          <Dropdown.Toggle variant="primary">
+                                          <Dropdown.Toggle disabled={userEmail === user.email} variant="primary">
                                               {user.role}
                                           </Dropdown.Toggle>
                                            <Dropdown.Menu>
