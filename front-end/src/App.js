@@ -12,15 +12,22 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
   const [role, setRole] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(()=>{
     const token = localStorage.getItem("token");
     if (token) {
+      try {
+        let decodedToken = jwt_decode(token);
+        setRole(decodedToken.role);
+        setUsername(decodedToken.username);
+        setEmail(decodedToken.email);
 
-      let decodedToken = jwt_decode(token);
-      setRole(decodedToken.role);
-
-      setIsLoggedIn(true);
+        setIsLoggedIn(true);
+      } catch (error) {
+        setIsLoggedIn(false);
+      }
     } else {
       setIsLoggedIn(false);
     }
@@ -51,7 +58,7 @@ function App() {
                 {role === "Admin" && <Nav.Link onClick={()=>setShowUsers(true)}>Users</Nav.Link>}
               </Nav>
               <Nav>
-                <Nav.Link onClick={()=>logout()}>Logout</Nav.Link>
+                <Nav.Link onClick={()=>logout()}>{username}, Logout</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>
@@ -63,7 +70,7 @@ function App() {
           {isLoggedIn ? 
             <Fragment>
               {showUsers ? 
-                <Users />
+                <Users role={role} userEmail={email} />
                 :
                 <Home role={role} />
               }
