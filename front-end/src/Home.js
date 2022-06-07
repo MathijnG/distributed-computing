@@ -139,7 +139,7 @@ const Home = ({role}) => {
                   }
                   {result &&
                     <Fragment>
-                      <h1 className="mt-5 mb-3">Results</h1>
+                      <h3 className="mt-5 mb-3">Results</h3>
                       <CodeEditor
                         value={result}
                         language="python"

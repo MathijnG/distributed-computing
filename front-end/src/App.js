@@ -6,6 +6,8 @@ import {Navbar, Container, NavDropdown, Nav, Row} from "react-bootstrap";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import jwt_decode from "jwt-decode";
+import axios from "axios";
+import { handleError } from "./errors";
 
 function App() {
 
@@ -18,16 +20,31 @@ function App() {
   useEffect(()=>{
     const token = localStorage.getItem("token");
     if (token) {
-      try {
-        let decodedToken = jwt_decode(token);
-        setRole(decodedToken.role);
-        setUsername(decodedToken.username);
-        setEmail(decodedToken.email);
+      axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/validate", {token: token})
+        .then((response) => {
+          if(!response.data.isValid) {
+            logout();
+          }
+        })
+        .catch((error) => {
+          logout();
+        })
+    }
+  },[showUsers])
 
-        setIsLoggedIn(true);
-      } catch (error) {
-        setIsLoggedIn(false);
-      }
+  useEffect(()=>{
+    const token = localStorage.getItem("token");
+    if (token) {
+        try {
+          let decodedToken = jwt_decode(token);
+          setRole(decodedToken.role);
+          setUsername(decodedToken.username);
+          setEmail(decodedToken.email);
+      
+          setIsLoggedIn(true);
+        } catch (error) {
+          setIsLoggedIn(false);
+        }
     } else {
       setIsLoggedIn(false);
     }
