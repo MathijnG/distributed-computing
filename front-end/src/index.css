@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.form-switch {
+  padding-left: 3.5em !important;
+  padding-right: 1.5rem;
+}

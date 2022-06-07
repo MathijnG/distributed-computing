@@ -68,18 +68,22 @@ const Statistics = () => {
   ];
 
   useEffect(() => {
-    setData(axios.get(process.env.SPARK_MONITOR + '/api/v1/applications'));
-    data.forEach((app) => {
-      var index = data.indexOf(app);
-      if (!app.attempts[0].completed && !temp.includes(app)) {
-        temp.push(app);
-        data.splice(data.indexOf(index));
-      }
-    });
-    var final = temp.concat(data);
-    console.log(temp);
-    setDoneApps(final);
-  }, []);
+    axios.get(process.env.REACT_APP_SPARK_MONITOR + '/api/v1/applications')
+      .then((response) => {
+        setData(response);
+
+        data.forEach((app) => {
+          var index = data.indexOf(app);
+          if (!app.attempts[0].completed && !temp.includes(app)) {
+            temp.push(app);
+            data.splice(data.indexOf(index));
+          }
+        });
+        var final = temp.concat(data);
+        console.log(temp);
+        setDoneApps(final);
+      })
+  }, [data, temp]);
 
   return (
     <Fragment>

@@ -4,6 +4,7 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 import axios from "axios";
 import LoadingIcon from "./loading.svg"
 import Statistics from "./Statistics";
+import { handleError } from "./errors";
 
 const Home = ({role}) => {
 
@@ -20,9 +21,6 @@ const Home = ({role}) => {
       e.preventDefault();
   
       if (code && title) {
-        setSuccess(true);
-        setError(false);
-  
         const formData = new FormData();
         formData.append("Title", title)
         formData.append("PythonCode", code);
@@ -40,8 +38,7 @@ const Home = ({role}) => {
           })
   
       } else {
-        setSuccess(false);
-        setError(true);
+        handleError("Fill in all the fields to submit this code.")
       }
     }
     
@@ -51,20 +48,25 @@ const Home = ({role}) => {
       const formData = new FormData();
       formData.append('file', file);
       // console.log(file);
+
+      setIsLoading(true);
+
       axios
         .post(process.env.REACT_APP_BACKEND + '/api/File/upload', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((response) => {
-          console.log(response);
+          setIsLoading(false);
+          setResult(response.data);
         })
         .catch((error) => {
-          console.log(error);
+          setIsLoading(false);
+          console.log(error)
         });
     };
 
     const handleToggle = () => {
-      console.log("toggle");
+      setShowFileUpload(!showFileUpload);
     }
 
     return (
@@ -81,15 +83,33 @@ const Home = ({role}) => {
                 <Container >
                   <Row>
                     <Col style={{display: "flex", textAlign: "center", justifyContent: "center"}}>
-                      <p>Code upload</p><Form.Check style={{fontSize: "20px"}} onClick={handleToggle} type="switch"/><p>File upload</p>
+                      <p>File upload</p><Form.Check style={{fontSize: "20px"}} onClick={handleToggle} type="switch"/><p>Code upload</p>
                     </Col>
                   </Row>
 
                   {showFileUpload ? 
                     <Row style={{textAlign: "center"}}>
-                    <Col style={{padding: "3rem", margin: "auto"}}>
-                      
-                    </Col>
+                      <Col style={{padding: "3rem", margin: "auto"}}>
+                        <h1>Distributed computing</h1>
+                        <p>The python code you submit will be distributed on a cluster of several workstations to improve performance.</p>
+                        {error && 
+                          <Alert dismissible onClose={() => setError(false)} variant="danger">The title or code field(s) are empty! Please fill in all the fields to submit your code.</Alert>
+                        }
+                        {success && 
+                          <Alert dismissible onClose={() => setSuccess(false)} variant="success">The code has been submitted!</Alert>
+                        }
+                        <Form>
+                        <Form.Group className="mb-3">
+                          <Form.Control className="mb-4" placeholder="Enter script title here" type="text" value={title} onChange={(e)=>{setTitle(e.target.value)}} />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                          <Form.Control type="file" onChange={(e) => setFile(e.target.files[0])} />
+                        </Form.Group>
+                        <div>
+                          <Button type="submit" variant="dark" style={{width:"30%"}} onClick={(e) => handleUpload(e)}>Submit</Button>
+                        </div>
+                        </Form>
+                      </Col>
                     </Row>
                     :
                     <Row style={{textAlign: "center"}}>
@@ -146,10 +166,6 @@ const Home = ({role}) => {
                       </Col>
                     </Row>
                   }
-
-                  
-                          
-                      
                 </Container>}
               </Fragment>}
         <Statistics />
