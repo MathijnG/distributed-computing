@@ -87,9 +87,27 @@ const Home = ({role}) => {
 
                   {showFileUpload ? 
                     <Row style={{textAlign: "center"}}>
-                    <Col style={{padding: "3rem", margin: "auto"}}>
-                      
-                    </Col>
+                      <Col style={{padding: "3rem", margin: "auto"}}>
+                        <h1>Distributed computing</h1>
+                        <p>The python code you submit will be distributed on a cluster of several workstations to improve performance.</p>
+                        {error && 
+                          <Alert dismissible onClose={() => setError(false)} variant="danger">The title or code field(s) are empty! Please fill in all the fields to submit your code.</Alert>
+                        }
+                        {success && 
+                          <Alert dismissible onClose={() => setSuccess(false)} variant="success">The code has been submitted!</Alert>
+                        }
+                        <Form>
+                        <Form.Group className="mb-3">
+                          <Form.Control className="mb-4" placeholder="Enter script title here" type="text" value={title} onChange={(e)=>{setTitle(e.target.value)}} />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                          <Form.Control type="file" onChange={(e) => setFile(e.target.files[0])} />
+                        </Form.Group>
+                        <div>
+                          <Button type="submit" variant="dark" style={{width:"30%"}} onClick={(e) => handleUpload(e)}>Submit</Button>
+                        </div>
+                        </Form>
+                      </Col>
                     </Row>
                     :
                     <Row style={{textAlign: "center"}}>
@@ -146,10 +164,6 @@ const Home = ({role}) => {
                       </Col>
                     </Row>
                   }
-
-                  
-                          
-                      
                 </Container>}
               </Fragment>}
         <Statistics />
