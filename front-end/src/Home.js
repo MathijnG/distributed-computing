@@ -4,6 +4,7 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 import axios from "axios";
 import LoadingIcon from "./loading.svg"
 import Statistics from "./Statistics";
+import { handleError } from "./errors";
 
 const Home = ({role}) => {
 
@@ -20,9 +21,6 @@ const Home = ({role}) => {
       e.preventDefault();
   
       if (code && title) {
-        setSuccess(true);
-        setError(false);
-  
         const formData = new FormData();
         formData.append("Title", title)
         formData.append("PythonCode", code);
@@ -40,8 +38,7 @@ const Home = ({role}) => {
           })
   
       } else {
-        setSuccess(false);
-        setError(true);
+        handleError("Fill in all the fields to submit this code.")
       }
     }
     
@@ -51,15 +48,20 @@ const Home = ({role}) => {
       const formData = new FormData();
       formData.append('file', file);
       // console.log(file);
+
+      setIsLoading(true);
+
       axios
         .post(process.env.REACT_APP_BACKEND + '/api/File/upload', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((response) => {
-          console.log(response);
+          setIsLoading(false);
+          setResult(response.data);
         })
         .catch((error) => {
-          console.log(error);
+          setIsLoading(false);
+          console.log(error)
         });
     };
 

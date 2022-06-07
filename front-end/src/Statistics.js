@@ -68,7 +68,7 @@ const Statistics = () => {
   ];
 
   useEffect(() => {
-    axios.get(process.env.SPARK_MONITOR + '/api/v1/applications')
+    axios.get(process.env.REACT_APP_SPARK_MONITOR + '/api/v1/applications')
       .then((response) => {
         setData(response);
 
