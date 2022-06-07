@@ -16,11 +16,6 @@ namespace DcApi.Persistency
             using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-
-                if (dbContext.Database.GetPendingMigrations().Any())
-                {
-                    await dbContext.Database.MigrateAsync();
-
                     var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
                     foreach (var role in Roles)
@@ -30,7 +25,6 @@ namespace DcApi.Persistency
                             await roleManager.CreateAsync(new IdentityRole(role));
                         }
                     }
-                }
             }
         }
     }
