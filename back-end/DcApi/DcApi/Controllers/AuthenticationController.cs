@@ -75,6 +75,29 @@ namespace DcApi.Controllers
             }
         }
 
+        [HttpPost("updaterole")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult updaterole([FromBody] UpdateUserRole model)
+        {
+            if (authService.UpdateRole(model).Result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("roles")]
+        [Authorize(Roles = "Admin")]
+        public List<string> getroles()
+        {
+            return authService.GetRoles();
+        }
+
+
+
         [HttpPost("validate")]
         public JwtValidation ValidateJwt([FromBody] TokenContainer token)
         {

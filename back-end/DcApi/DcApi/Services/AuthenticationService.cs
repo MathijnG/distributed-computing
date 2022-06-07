@@ -127,5 +127,34 @@ namespace DcApi.Services
             }
             return users;
         }
+
+        public async Task<bool> UpdateRole(UpdateUserRole model)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(model.Email);
+                var roles = await userManager.GetRolesAsync(user);
+                foreach (var role in roles)
+                {
+                    await userManager.RemoveFromRoleAsync(user, role);
+                }
+                await userManager.AddToRoleAsync(user, model.Role);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+        public async Task<string> GetRoles()
+        {
+            var roles = new List<string>();
+            foreach(var role in roleManager.Roles)
+            {
+                roles.Add(role.Name);
+            }
+        }
     }
 }
