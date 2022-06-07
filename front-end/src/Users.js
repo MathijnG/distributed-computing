@@ -3,10 +3,11 @@ import {Table, Dropdown, Button, Form, Modal, DropdownButton} from "react-bootst
 import { handleError, handleSuccess } from "./errors";
 import axios from "axios";
 
-const Users = () => {
+const Users = ({user}) => {
     
     const [show, setShow] = useState(false);
     const [users, setUsers] = useState(null);
+    const [roles, setRoles] = useState(null);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -29,6 +30,7 @@ const Users = () => {
         //         handleError(error.message);
         //     })
 
+        fetchRoles();
         fetchUsers();
     },[])
 
@@ -72,17 +74,27 @@ const Users = () => {
            })
     }
 
+    const fetchRoles = () => {
+      axios.get(process.env.REACT_APP_BACKEND + "/api/Authentication/roles", 
+        {headers: {"Authorization": "Bearer " + localStorage.getItem("token")}})
+           .then((response) => {
+               setRoles(response.data);
+           })
+           .catch((error) => {
+               handleError(error.message);
+           })
+    }
+
     const updateRole = (role, email) => {
-      console.log(role + " " + email);
-      // axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/update-role", {role: role},
-      //   {headers: {"Authorization": "Bearer " + localStorage.getItem("token")}})
-      //     .then((response) => {
-      //       fetchUsers();
-      //       handleSuccess("Updated role successfully!")
-      //     })
-      //     .catch((error) => {
-      //       handleError("Failed to update role.")
-      //     })
+      axios.post(process.env.REACT_APP_BACKEND + "/api/Authentication/updaterole", {email: email, role: role},
+        {headers: {"Authorization": "Bearer " + localStorage.getItem("token")}})
+          .then((response) => {
+            fetchUsers();
+            handleSuccess("Updated role successfully!")
+          })
+          .catch((error) => {
+            handleError("Failed to update role.")
+          })
     }
 
     return (
@@ -152,9 +164,9 @@ const Users = () => {
                                               {user.role}
                                           </Dropdown.Toggle>
                                            <Dropdown.Menu>
-                                              <Dropdown.Item eventkey="Reader">Reader</Dropdown.Item>
-                                              <Dropdown.Item eventkey="Writer">Writer</Dropdown.Item>
-                                              <Dropdown.Item eventkey="Admin">Admin</Dropdown.Item>
+                                              {roles.map((role, i) => 
+                                                <Dropdown.Item key={i} eventkey={role}>{role}</Dropdown.Item>
+                                              )}
                                           </Dropdown.Menu>
                                         </Dropdown>
                                     </td>
