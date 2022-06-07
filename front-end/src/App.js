@@ -11,13 +11,14 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
+  const [role, setRole] = useState("");
 
   useEffect(()=>{
     const token = localStorage.getItem("token");
     if (token) {
 
       let decodedToken = jwt_decode(token);
-      console.log(decodedToken);
+      setRole(decodedToken.role);
 
       setIsLoggedIn(true);
     } else {
@@ -47,7 +48,7 @@ function App() {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 <Nav.Link onClick={()=>setShowUsers(false)}>Home</Nav.Link>
-                <Nav.Link onClick={()=>setShowUsers(true)}>Users</Nav.Link>
+                {role === "Admin" && <Nav.Link onClick={()=>setShowUsers(true)}>Users</Nav.Link>}
               </Nav>
               <Nav>
                 <Nav.Link onClick={()=>logout()}>Logout</Nav.Link>
@@ -64,7 +65,7 @@ function App() {
               {showUsers ? 
                 <Users />
                 :
-                <Home />
+                <Home role={role} />
               }
             </Fragment>
             :
