@@ -68,30 +68,21 @@ const Statistics = () => {
   ];
 
   useEffect(() => {
+    axios.get(process.env.REACT_APP_SPARK_MONITOR + '/api/v1/applications', {headers: {"Access-Control-Allow-Origin": "*"}})
+      .then((response) => {
+        setData(response);
 
-    fetch(process.env.REACT_APP_SPARK_MONITOR + '/api/v1/applications')
-    .then((response) => {
-        console.log(response)
-    })
-    .catch((error) => {
-        console.log(error)
-    })
-
-    // axios.get(process.env.REACT_APP_SPARK_MONITOR + '/api/v1/applications', {headers: {"Access-Control-Allow-Origin": "*"}})
-    //   .then((response) => {
-    //     setData(response);
-
-    //     data.forEach((app) => {
-    //       var index = data.indexOf(app);
-    //       if (!app.attempts[0].completed && !temp.includes(app)) {
-    //         temp.push(app);
-    //         data.splice(data.indexOf(index));
-    //       }
-    //     });
-    //     var final = temp.concat(data);
-    //     console.log(temp);
-    //     setDoneApps(final);
-    //   })
+        data.forEach((app) => {
+          var index = data.indexOf(app);
+          if (!app.attempts[0].completed && !temp.includes(app)) {
+            temp.push(app);
+            data.splice(data.indexOf(index));
+          }
+        });
+        var final = temp.concat(data);
+        console.log(temp);
+        setDoneApps(final);
+      })
   }, [data, temp]);
 
   return (
