@@ -83,7 +83,7 @@ const Statistics = () => {
         console.log(temp);
         setDoneApps(final);
       })
-  }, [data, temp]);
+  }, []);
 
   return (
     <Fragment>
