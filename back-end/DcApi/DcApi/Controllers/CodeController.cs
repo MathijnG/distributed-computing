@@ -26,7 +26,7 @@ namespace DcApi.Controllers
                 ReturnValue += "wrote python file to " + Path.GetTempPath() + "pythonscript.py\n";
                 ProcessStartInfo start = new ProcessStartInfo();
                 start.FileName = "/home/hadoop/spark/bin/spark-submit";
-                start.Arguments = string.Format("{0} {1}", " --deploy-mode cluster " + Path.GetTempPath() + "pythonscript.py", "");
+                start.Arguments = string.Format("{0} {1}", " --deploy-mode cluster " + Path.GetTempPath() + "pythonscript.py", "" + "1000");
                 start.UseShellExecute = false;
                 start.RedirectStandardOutput = true;
                 ReturnValue += "Executing process...\n";
