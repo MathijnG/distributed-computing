@@ -5,6 +5,7 @@ import axios from "axios";
 import LoadingIcon from "./loading.svg"
 import Statistics from "./Statistics";
 import { handleError } from "./errors";
+import Editor from 'react-simple-code-editor';
 
 const Home = ({role}) => {
 
@@ -115,18 +116,14 @@ const Home = ({role}) => {
                           <Form.Control className="mb-4" placeholder="Enter script title here" type="text" value={title} onChange={(e)=>{setTitle(e.target.value)}} />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                          <CodeEditor
+                          <Editor
                             value={code}
-                            language="python"
                             placeholder="Enter python code here"
                             onChange={(e) => setCode(e.target.value)}
                             padding={15}
                             style={{
-                              borderRadius: 6,
-                              fontSize: 15,
-                              backgroundColor: "#1C1B22",
-                              fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                              marginBottom: "1rem"
+                              fontFamily: '"Fira code", "Fira Mono", monospace',
+                              fontSize: 14,
                             }}
                           />
                         </Form.Group>

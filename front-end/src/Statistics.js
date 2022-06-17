@@ -71,7 +71,7 @@ const Statistics = () => {
     axios.get(process.env.REACT_APP_SPARK_MONITOR + '/api/v1/applications', {headers: {"Access-Control-Allow-Origin": "*"}})
       .then((response) => {
 
-        console.log("Response: " + response);
+        console.log(response);
 
         setData(response);
 
