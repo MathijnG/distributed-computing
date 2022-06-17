@@ -17,7 +17,17 @@ namespace DcApi.Persistency
             {
                 var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
                     var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                IdentityUser user = new IdentityUser()
+                {
+                    Email = "admin@admin.com",
+                    UserName = "admin",
+                };
+                var admin = userManager.FindByNameAsync("admin");
+                if(admin == null)
+                {
+                    await userManager.CreateAsync(user, "admin");
+                }
                     foreach (var role in Roles)
                     {
                         if (!await roleManager.RoleExistsAsync(role))
