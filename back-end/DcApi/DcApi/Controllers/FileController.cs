@@ -13,7 +13,7 @@ namespace DcApi.Controllers
     public class FileController : Controller
     {
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFileAsync(IFormFile file)
+        public async Task<string> UploadFileAsync(IFormFile file)
         {
             string _fileName = Path.GetFileName(file.FileName);
 
@@ -25,37 +25,30 @@ namespace DcApi.Controllers
                 string fileName = _fileName.TrimEnd(fileExtension.ToCharArray());
                 fileName = $"{fileName}_{Guid.NewGuid()}{fileExtension}";
 
+                string code;
+                using (StreamReader stream = new StreamReader(file.OpenReadStream()))
+                {
+                    code = stream.ReadToEnd();
+                }
                 // Make file spark readable and write to tmp dir.
-                await System.IO.File.WriteAllTextAsync(Path.GetTempPath() + fileName, MakeSparkReadable(file));
+                await System.IO.File.WriteAllTextAsync(Path.GetTempPath() + fileName, code);
 
                 // Start python code on hadoop cluster.
                 ProcessStartInfo start = new ProcessStartInfo();
                 start.FileName = "/home/hadoop/spark/bin/spark-submit";
-                start.Arguments = string.Format("{0} {1}", " --deploy-mode cluster " + Path.GetTempPath() + fileName, "");
+                start.Arguments = string.Format("{0} {1}", " --deploy-mode client " + Path.GetTempPath() + fileName, "");
                 start.UseShellExecute = false;
                 start.RedirectStandardOutput = true;
 
-                Process.Start(start);
-                return Ok();
+                using (Process process = Process.Start(start))
+                {
+                    using (StreamReader reader = process.StandardOutput)
+                    {
+                        return reader.ReadToEnd();
+                    }
+                }
             }
-            return BadRequest();
-        }
-
-        private string MakeSparkReadable(IFormFile file)
-        {
-            string code;
-            using (StreamReader stream = new StreamReader(file.OpenReadStream()))
-            {
-                code = stream.ReadToEnd();
-            }
-            string sparkReadableCode = "";
-            sparkReadableCode += "from pyspark.sql import SparkSession\n";
-            sparkReadableCode += "\n";
-            sparkReadableCode += "\n";
-            sparkReadableCode += $"spark = SparkSession.builder.appName(\"{file.FileName}\").getOrCreate()\n\n";
-            sparkReadableCode += code;
-
-            return sparkReadableCode;
+            return "Something went wrong. check the spark logs for more details.";
         }
     }
 }

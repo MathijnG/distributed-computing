@@ -20,16 +20,13 @@ namespace DcApi.Controllers
         {
             try
             {
-                string ReturnValue = "starting writing python file\n";
-                ReturnValue += "Content of python file:\n" + PythonCode;
-                await System.IO.File.WriteAllTextAsync(Path.GetTempPath() + "pythonscript.py", MakeSparkReadable(PythonCode, Title));
-                ReturnValue += "wrote python file to " + Path.GetTempPath() + "pythonscript.py\n";
+                string ReturnValue = "";
+                await System.IO.File.WriteAllTextAsync(Path.GetTempPath() + $"{Title}.py", PythonCode);
                 ProcessStartInfo start = new ProcessStartInfo();
                 start.FileName = "/home/hadoop/spark/bin/spark-submit";
-                start.Arguments = string.Format("{0} {1}", " --deploy-mode cluster " + Path.GetTempPath() + "pythonscript.py", "");
+                start.Arguments = string.Format("{0} {1}", " --deploy-mode client " + Path.GetTempPath() + "pythonscript.py", "");
                 start.UseShellExecute = false;
                 start.RedirectStandardOutput = true;
-                ReturnValue += "Executing process...\n";
                 using (Process process = Process.Start(start))
                 {
                     using (StreamReader reader = process.StandardOutput)
@@ -45,18 +42,6 @@ namespace DcApi.Controllers
                 throw;
             }
             
-        }
-
-        private string MakeSparkReadable(string code, string title)
-        {
-            string sparkReadableCode = "";
-            sparkReadableCode += "from pyspark.sql import SparkSession\n";
-            sparkReadableCode += "\n";
-            sparkReadableCode += "\n";
-            sparkReadableCode += $"spark = SparkSession.builder.appName(\"{title}\").getOrCreate()\n\n";
-            sparkReadableCode += code;
-
-            return sparkReadableCode;
         }
     }
 }
