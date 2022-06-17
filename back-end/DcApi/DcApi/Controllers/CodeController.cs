@@ -24,7 +24,7 @@ namespace DcApi.Controllers
                 await System.IO.File.WriteAllTextAsync(Path.GetTempPath() + $"{Title}.py", PythonCode);
                 ProcessStartInfo start = new ProcessStartInfo();
                 start.FileName = "/home/hadoop/spark/bin/spark-submit";
-                start.Arguments = string.Format("{0} {1}", " --deploy-mode client " + Path.GetTempPath() + "pythonscript.py", "");
+                start.Arguments = string.Format("{0} {1}", " --deploy-mode client " + Path.GetTempPath() + $"{Title}.py", "");
                 start.UseShellExecute = false;
                 start.RedirectStandardOutput = true;
                 using (Process process = Process.Start(start))
