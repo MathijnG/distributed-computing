@@ -23,7 +23,7 @@ namespace DcApi.Persistency
                     Email = "admin@admin.com",
                     UserName = "admin",
                 };
-                var admin = userManager.FindByNameAsync("admin");
+                var admin = await userManager.FindByNameAsync("admin");
                 if(admin == null)
                 {
                     await userManager.CreateAsync(user, "admin");
