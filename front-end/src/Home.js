@@ -1,11 +1,14 @@
 import {Fragment, useEffect, useState} from "react";
 import {Container,Row,Button,Col,Form, Alert} from "react-bootstrap";
-import CodeEditor from '@uiw/react-textarea-code-editor';
 import axios from "axios";
 import LoadingIcon from "./loading.svg"
 import Statistics from "./Statistics";
 import { handleError } from "./errors";
 import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css';
 
 const Home = ({role}) => {
 
@@ -118,12 +121,16 @@ const Home = ({role}) => {
                         <Form.Group className="mb-3">
                           <Editor
                             value={code}
+                            highlight={code => highlight(code, languages.js)}
                             placeholder="Enter python code here"
                             onChange={(e) => setCode(e.target.value)}
                             padding={15}
                             style={{
                               fontFamily: '"Fira code", "Fira Mono", monospace',
-                              fontSize: 14,
+                              fontSize: 15,
+                              backgroundColor: "#1C1B22",
+                              color: "white",
+                              borderRadius: "10px"
                             }}
                           />
                         </Form.Group>
@@ -137,18 +144,17 @@ const Home = ({role}) => {
                   {result &&
                     <Fragment>
                       <h3 className="mt-5 mb-3">Results</h3>
-                      <CodeEditor
-                        value={result}
-                        language="python"
-                        padding={15}
-                        style={{
-                          borderRadius: 6,
-                          fontSize: 15,
-                          backgroundColor: "#1C1B22",
-                          fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                          marginBottom: "1rem"
-                        }}
-                      />
+                      <Editor
+                            value={result}
+                            highlight={result => highlight(result, languages.js)}
+                            padding={15}
+                            style={{
+                              fontFamily: '"Fira code", "Fira Mono", monospace',
+                              fontSize: 15,
+                              backgroundColor: "#1C1B22",
+                              borderRadius: "10px"
+                            }}
+                          />
                     </Fragment>
                   }
                 </Container>
