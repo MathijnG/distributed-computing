@@ -128,7 +128,7 @@ const Home = ({role}) => {
                             style={{
                               fontFamily: '"Fira code", "Fira Mono", monospace',
                               fontSize: 15,
-                              backgroundColor: "#1C1B22",
+                              backgroundColor: "#F4F4F4",
                               color: "white",
                               borderRadius: "10px"
                             }}
@@ -151,7 +151,7 @@ const Home = ({role}) => {
                             style={{
                               fontFamily: '"Fira code", "Fira Mono", monospace',
                               fontSize: 15,
-                              backgroundColor: "#1C1B22",
+                              backgroundColor: "#F4F4F4",
                               borderRadius: "10px"
                             }}
                           />
