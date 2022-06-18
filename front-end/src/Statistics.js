@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
-import { Table } from 'react-bootstrap';
+import { Table, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
 const Statistics = () => {
@@ -70,7 +70,9 @@ const Statistics = () => {
             <tbody>{renderTable()}</tbody>
           </Table>
         </div>
-      ) : null}
+      ) :
+        <Alert>Unfortunately no data could be displayed here. Please try refreshing the page.</Alert>
+      }
     </Fragment>
   );
 };
